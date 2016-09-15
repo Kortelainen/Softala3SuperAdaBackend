@@ -2,10 +2,15 @@
   "name": "superada-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js"
   },
   "author": "Futurice",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "hapi": "^15.0.3",
+    "joi": "^9.0.4"
+  }
 }
