@@ -1,5 +1,7 @@
 'use strict';
 
+exports.logErrors = true; // true = write errors
+
 exports.knexlocal = require('knex')({
   client: 'pg',
   connection: {

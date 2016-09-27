@@ -1,23 +1,18 @@
 'use strict';
 
-var knex = require('knex')({
-  client: 'pg',
-  connection: {
-     host : '127.0.0.1',
-     user : 'petrikortelainen', /* whoami */
-     password : ' ',
-     database : 'postgres'
-   }
-});
+var knex = require('../db').knexlocal;
+var logErrors = require('../db').logErrors;
 
-
-exports.newTeam = function(name, callback){
-    knex("Team").insert({teamName: name})
+exports.newTeam = function(team, callback){
+    knex("Team").insert(team)
     .then(function(results) {
-      console.log(results);
+      callback(null, results);
       })
     .catch(function(err) {
-      console.log('Something went wrong!', err);
+      if(logErrors){
+        console.log('Something went wrong!', err);
+      }
+      callback(err);
     });
   };
 
@@ -27,6 +22,9 @@ exports.newTeam = function(name, callback){
      callback(null, results);
    })
    .catch(function(err) {
+     if(logErrors){
+       console.log('Something went wrong!', err);
+     }
      callback(err);
    });
   };
