@@ -81,7 +81,7 @@ routes.push({
                       docId: request.payload.documentId
                     }
 
-        teamDbFunctions.newTeam(team,function(result){
+        teamDbFunctions.addTeam(team,function(result){
           //callback
           reply(result);
           }
