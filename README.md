@@ -14,7 +14,8 @@ todo
 
 ## Windows
 
-Git pull, Recomended to use tortoiseSVN
+Git pull project.
+Recomended to use tortoiseSVN
 
 Inside repo
 
@@ -38,7 +39,7 @@ C:\>nodemon
 ```
 
 install postgresql https://www.bigsql.org/postgresql/installers.jsp
-Upon installing set password to "admin"
+NOTE install all 3 selectable paggages and set password to "admin"
 
 try running again
 ```
