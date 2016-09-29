@@ -48,7 +48,7 @@ nodemon
 
 init db
 ```
-npm run db:migrations
+npm run db:migrate
 ```
 
 try with browser
