@@ -54,8 +54,8 @@ try with browser
 ```
 localhost:3000/knexTest
 ```
-```
--UPON errors try this:
+```diff
+- UPON errors try this:
 ```
 ```
   Change port in index.js
