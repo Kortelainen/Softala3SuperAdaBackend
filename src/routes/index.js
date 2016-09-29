@@ -24,18 +24,22 @@ routes.push({
   path: '/knexTest',
   handler: function (request, reply){
 
+    var success = true
+
     for (var i = 0; i < 5; i++) {
       knex("Question").insert({questionText: i})
       .then(function(results) {
         console.log(results);
-        reply({success: (results.rowCount > 0)});
+        if(success == true){
+          success = results.rowCount > 0
+        }
         })
 
       .catch(function(err) {
         console.log('Something went wrong!', err);
       });
     }
-
+    reply({success: success});
 
   }
 });
