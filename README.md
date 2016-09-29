@@ -103,7 +103,7 @@ $ lunchy start postgres
 
 now in terminal within repo initiate db tables
 ```
-npm run db:migrations
+npm run db:migrate
 ```
 
 to make sure tables and db connection works run on browser
