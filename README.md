@@ -12,7 +12,7 @@ todo
 
 # Setup guide
 
-Windows
+## Windows
 
 Git pull, Recomended to use tortoiseSVN
 
@@ -54,8 +54,9 @@ try with browser
 ```
 localhost:3000/knexTest
 ```
-
-UPON errors try this:
+```
+-UPON errors try this:
+```
 ```
   Change port in index.js
   you can try port 30000 or any other. in netstat you can see all ports currently in use
@@ -64,7 +65,7 @@ UPON errors try this:
   its likely user is postgres if not go to bigsql manager and see the name of db owner
 ```
 
-Mac
+## Mac
 
 git pull
 
