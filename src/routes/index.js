@@ -1,9 +1,9 @@
 'use strict';
-
 var knex = require('../db').knexlocal;
-
+var authUtil = require('../utils/authUtil');
 var teamDbFunctions = require('../datasource/teamfunctions.js');
 const Joi = require('joi');
+
 
 var routes = [];
 
@@ -44,6 +44,7 @@ routes.push({
   }
 });
 
+//#Region teamRoutes
 routes.push({
   method: 'POST',
   path: '/teams/authenticate',
@@ -55,11 +56,19 @@ routes.push({
     }
   },
   handler: function(request, reply){
-    reply({teamID: 1, teamname: request.payload.name})
+     teamDbFunctions.getTeam(request.payload.name,function(err, result){
+       //callback
+       var success = result != null;
+       var token = '';
+       if(success){
+          token = authUtil.createToken(result, request.payload.name, 'team');
+        }
+       reply({success: success, token: token, result: result});
+       }
+     );
   }
 });
 
-//#Region teamRoutes
 routes.push({
     method: 'POST',
     path: '/teams',
@@ -79,7 +88,7 @@ routes.push({
                       docId: request.payload.documentId
                     }
 
-        teamDbFunctions.addTeam(team,function(result){
+        teamDbFunctions.addTeam(team,function(err, result){
           //callback
           reply(result);
           }

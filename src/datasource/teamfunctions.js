@@ -4,8 +4,7 @@ var knex = require('../db').knexlocal;
 var logErrors = require('../db').logErrors;
 
 exports.getTeam = function(name, callback){
-    knex("Team").where({"teamName": name })
-    .select("teamId")
+    knex.select("teamID").from("Team").where({"teamName": name })
     .then(function(results) {
       callback(null, results);
       })
@@ -19,6 +18,7 @@ exports.getTeam = function(name, callback){
 
 exports.addTeam = function(team, callback){
     knex("Team").insert(team)
+    .returning("teamID")
     .then(function(results) {
       callback(null, results);
       })
