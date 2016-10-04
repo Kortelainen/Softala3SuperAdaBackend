@@ -61,7 +61,7 @@ routes.push({
        var success = result != null;
        var token = '';
        if(success){
-          token = authUtil.createToken(result, request.payload.name, 'team');
+          //token = authUtil.createToken(result, request.payload.name, 'team');
         }
        reply({success: success, token: token, result: result});
        }

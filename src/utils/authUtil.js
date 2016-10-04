@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+//const bcrypt = require('bcrypt');
 var knex = require('../db').knexlocal;
 var secret = 'really_secret_key';
 //const jwt = require('react-native-jwt');
