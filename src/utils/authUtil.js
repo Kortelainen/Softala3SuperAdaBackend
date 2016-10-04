@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 var knex = require('../db').knexlocal;
 var secret = 'really_secret_key';
-const jwt = require('react-native-jwt');
+//const jwt = require('react-native-jwt');
 
 exports.checkIfTeamNameAvailable = function(req, res) {
     return true; //TODO
