@@ -23,7 +23,7 @@ exports.up = function(knex) {
     })
 
     .createTable('Team', function(table) {
-      table.increments('teamID').primary();
+      table.increments('teamId').primary();
       table.text('teamName').notNullable().unique();
       table.text('description').notNullable();
       table.boolean('active').defaultTo(true).notNullable();
@@ -39,6 +39,6 @@ exports.down = function(knex) {
   return knex.schema
   .dropTableIfExists('Feedback')
   .dropTableIfExists('Question')
-  .dropTableIfExists('Document')
-  .dropTableIfExists('Team');
+  .dropTableIfExists('Team')
+  .dropTableIfExists('Document');
 };

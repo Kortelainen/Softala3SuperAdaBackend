@@ -12,9 +12,9 @@
   "author": "Futurice",
   "license": "MIT",
   "dependencies": {
-    "bcrypt": "^0.8.7",
     "hapi": "^15.0.3",
     "joi": "^9.0.4",
+    "jsonwebtoken": "^7.1.9",
     "knex": "^0.12.1",
     "pg": "^6.1.0"
   }

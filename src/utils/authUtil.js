@@ -1,13 +1,14 @@
+
 //const bcrypt = require('bcrypt');
 var knex = require('../db').knexlocal;
 var secret = 'really_secret_key';
-//const jwt = require('react-native-jwt');
+var jwt = require('jsonwebtoken');
 
 exports.checkIfTeamNameAvailable = function(req, res) {
-    return true; //TODO
+    return true; // TODO
 }
 
-exports.hashPassword = function(password) {
+exports.hashPassword = function(password) { // TODO
   // Generate a salt at level 10 strength
   const promise = new Promise(
     function(resolve, reject) {

@@ -58,12 +58,19 @@ routes.push({
   handler: function(request, reply){
      teamDbFunctions.getTeam(request.payload.name,function(err, result){
        //callback
-       var success = result != null;
+
+       var success = false;
+       var id = 0;
+       if(result != null && result[0] != 'undefined'){
+         success = result[0].teamId > 0;
+         id = result[0].teamId;
+       }
+
        var token = '';
        if(success){
-          //token = authUtil.createToken(result, request.payload.name, 'team');
+          token = authUtil.createToken(id, request.payload.name, 'team');
         }
-       reply({success: success, token: token, result: result});
+       reply({success: success, token: token, result: id });
        }
      );
   }
