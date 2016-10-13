@@ -97,7 +97,20 @@ routes.push({
 //#EndRegion teamRoutes
 
 //#Region Company
-
+routes.push({
+    method: 'GET',
+    path: '/companies',
+    handler: function (request, reply) {
+        reply({helloworld: 'companies'});
+    }
+});
+routes.push({
+    method: 'POST',
+    path: '/company/authenticate',
+    handler: function (request, reply) {
+        reply({helloworld: 'authenticate'});
+    }
+});
 //#EndRegion Company
 
 
