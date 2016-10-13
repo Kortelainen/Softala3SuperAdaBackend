@@ -64,7 +64,8 @@ exports.verifyCredentials = function(req, res) {
 
 // Get EMPLOYEE data from jwt
 // DO NOT USE THIS TO GET MOBILE USER DATA!
-exports.bindEmployeeData = function(req, res) {
+exports.bindAdminData = function(req, res) {
+  /*
   try {
     const bearerToken = req.headers.authorization.slice(7);
     const decoded = jwt.verify(bearerToken, secret, {
@@ -84,33 +85,21 @@ exports.bindEmployeeData = function(req, res) {
     .catch(function(err) {
     });
   } catch (e) {
-    
-  }
+
+  }*/
 }
 
-// Get USER data from jwt
-// Note that checking for expiration is todo
-/*export function bindUserData(req, res) {
-  try {
-    const bearerToken = req.headers.authorization.slice(7);
-    const decoded = jwt.verify(bearerToken, secret, {
-      ignoreExpiration: true
-    });
-    const userId = decoded.id[0];
-    const name = decoded.name;
-    knex.first('id', 'name', 'assigneeId').from('users').where({id: userId, name: name})
-    .then(function(user) {
-      if (!user) {
-        res(Boom.unauthorized('Invalid token'));
-      } else {
-        res(user);
-      }
-    })
-    .catch(function(err) {
-      console.log(err);
-      res(Boom.unauthorized('Invalid token'));
-    });
-  } catch (e) {
-    res(Boom.unauthorized('Invalid token'));
-  }
-}*/
+// Get data from jwt
+exports.bindTeamData = function(req, res){
+const bearerToken = req.headers.authorization.slice(7);
+  const decoded = jwt.verify(bearerToken, secret, {
+    ignoreExpiration: true
+  });
+
+  var id = decoded.id;
+  var name = decoded.name;
+  var scope = decoded.scope;
+
+  res(decoded);
+
+}

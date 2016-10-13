@@ -17,23 +17,21 @@ exports.getTeam = function(name, callback){
 };
 
 exports.addTeam = function(team, callback){
-    /*knex.select("teamId")
+    knex.select("teamId")
     .from("Team")
     .where({"teamName": team.teamName })
     .then(function(result) {
-
       var exists = false; // Team name exists?
-      var id = 0;
-      if(result != null && result[0] != 'undefined' && result[0].teamId != 'undefined'){
+      if(result != null && typeof result[0] !== 'undefined' && result[0].teamId != 'undefined'){
         exists = result[0].teamId > 0;
-        id = result[0].teamId;
       }
-      if(exists){*/
+      if(exists){
+        callback("Duplicate name", null);
+      }else{
         knex("Team").insert(team)
         .returning("teamId")
-        .then(function(results) {
-          console.log(results);
-          callback(null, results);
+        .then(function(re) {
+          callback(null, re);
           })
         .catch(function(err) {
           if(logErrors){
@@ -41,14 +39,14 @@ exports.addTeam = function(team, callback){
           }
           callback(err);
         });
-      /*}
+      }
     })
     .catch(function(err) {
       if(logErrors){
         console.log('Something went wrong!', err);
       }
       callback(err);
-    });*/
+    });
   };
 
   exports.addQuestion = function(question, callback) {

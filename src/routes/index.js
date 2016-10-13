@@ -7,7 +7,7 @@ const Joi = require('joi');
 
 var routes = [];
 
-//#Region: hello world fuctions
+//#Region hello world fuctions
 
 routes.push({
     method: 'GET',
@@ -17,6 +17,7 @@ routes.push({
     }
 });
 
+//# End of helloworld routes
 
 //#Region teamRoutes
 routes.push({
@@ -53,26 +54,24 @@ routes.push({
     method: 'POST',
     path: '/teams',
     config: {
+      auth: {
+        strategy: 'jwt',
+        scope: 'team' //TODO change this to admin later
+      },
       validate: {
-        headers: Joi.object({
-          token: Joi.string().required()
-        }).options({allowUnknown: true}),
         payload: {
           name: Joi.string().required(),
           description: Joi.string(),
           documentId: Joi.number()
         }
       },
-      //pre: [
-        //{method: authUtil.bindUserData, assign: 'user'}
-      //]
+      pre: [
+        {method: authUtil.bindTeamData, assign: "team"}
+      ]
     },
 
     handler: function(request, reply){
-
-
-        var token = request.headers.token;
-
+        var decoded = request.pre.team;
 
         var team = {  teamName: request.payload.name,
                       description: request.payload.description,
@@ -83,11 +82,15 @@ routes.push({
         teamDbFunctions.addTeam(team,function(err, result){
           //callback
           var success = false;
+          var message = '';
           if(result != null && result[0] != null){
             success = result[0] > 0;
           }
+          if(!success){
+            message = "Adding team failed. Possibly due to dublicate name";
+          }
 
-          reply({success: success});
+          reply({success: success, message: message });
           }
         );
     } //End of handler
