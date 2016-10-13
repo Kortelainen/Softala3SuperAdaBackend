@@ -1,5 +1,5 @@
 # Softala3SuperAdaBackend
-Backed for SuperAda project
+Backend for SuperAda project
 
 # Test:
 browser type: localhost:3000
@@ -48,12 +48,12 @@ nodemon
 
 init db
 ```
-npm run db:migrate
+TODO npm run db:migrate
 ```
 
 try with browser
 ```
-localhost:3000/knexTest
+TODO
 ```
 ```diff
 - UPON errors try this:
@@ -103,12 +103,12 @@ $ lunchy start postgres
 
 now in terminal within repo initiate db tables
 ```
-npm run db:migrate
+TODO npm run db:migrate
 ```
 
 to make sure tables and db connection works run on browser
 ```
-localhost:3000/knexTest
+TODO
 ```
 
 
