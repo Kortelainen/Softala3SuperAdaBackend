@@ -1,7 +1,7 @@
 
 //const bcrypt = require('bcrypt');
 var knex = require('../db').knexlocal;
-var secret = 'really_secret_key';
+var secret = 'really_secret_key';//gen 2040 bit of random stuff
 var jwt = require('jsonwebtoken');
 
 exports.checkIfTeamNameAvailable = function(req, res) {
@@ -75,21 +75,16 @@ exports.bindEmployeeData = function(req, res) {
 
     console.log(decoded);
 
-    knex.first('id', 'name', 'email').from('employees').where({id: employeeId, name: name})
+    knex.first('id').from('Team').where({id: employeeId, name: name})
     .then(function(employee) {
       if (!employee) {
-        res(Boom.unauthorized('Invalid token'));
       } else {
-        res(employee);
       }
     })
     .catch(function(err) {
-      console.log(err);
-      res(Boom.badRequest(err));
     });
   } catch (e) {
-    console.log(e);
-    res(Boom.badRequest(e));
+    
   }
 }
 

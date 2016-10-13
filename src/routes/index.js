@@ -18,32 +18,6 @@ routes.push({
 });
 
 
-
-routes.push({
-  method: 'GET',
-  path: '/knexTest',
-  handler: function (request, reply){
-
-    var success = true
-
-    for (var i = 0; i < 5; i++) {
-      knex("Question").insert({questionText: i})
-      .then(function(results) {
-        console.log(results);
-        if(success == true){
-          success = results.rowCount > 0
-        }
-        })
-
-      .catch(function(err) {
-        console.log('Something went wrong!', err);
-      });
-    }
-    reply({success: success});
-
-  }
-});
-
 //#Region teamRoutes
 routes.push({
   method: 'POST',
@@ -58,7 +32,6 @@ routes.push({
   handler: function(request, reply){
      teamDbFunctions.getTeam(request.payload.name,function(err, result){
        //callback
-
        var success = false;
        var id = 0;
        if(result != null && result[0] != 'undefined'){
@@ -70,7 +43,7 @@ routes.push({
        if(success){
           token = authUtil.createToken(id, request.payload.name, 'team');
         }
-       reply({success: success, token: token, result: id });
+       reply({success: success, token: token });
        }
      );
   }
@@ -81,14 +54,26 @@ routes.push({
     path: '/teams',
     config: {
       validate: {
+        headers: Joi.object({
+          token: Joi.string().required()
+        }).options({allowUnknown: true}),
         payload: {
           name: Joi.string().required(),
           description: Joi.string(),
           documentId: Joi.number()
         }
-      }
+      },
+      //pre: [
+        //{method: authUtil.bindUserData, assign: 'user'}
+      //]
     },
+
     handler: function(request, reply){
+
+
+        var token = request.headers.token;
+
+
         var team = {  teamName: request.payload.name,
                       description: request.payload.description,
                       active: 1,
@@ -97,7 +82,12 @@ routes.push({
 
         teamDbFunctions.addTeam(team,function(err, result){
           //callback
-          reply(result);
+          var success = false;
+          if(result != null && result[0] != null){
+            success = result[0] > 0;
+          }
+
+          reply({success: success});
           }
         );
     } //End of handler
