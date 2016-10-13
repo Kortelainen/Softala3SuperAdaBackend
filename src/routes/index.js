@@ -71,8 +71,6 @@ routes.push({
     },
 
     handler: function(request, reply){
-        var decoded = request.pre.team;
-
         var team = {  teamName: request.payload.name,
                       description: request.payload.description,
                       active: 1,
@@ -97,6 +95,11 @@ routes.push({
 }); //End of POST: /teams
 
 //#EndRegion teamRoutes
+
+//#Region Company
+
+//#EndRegion Company
+
 
 //#Region feedback
 
