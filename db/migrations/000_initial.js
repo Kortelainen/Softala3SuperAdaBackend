@@ -30,6 +30,13 @@ exports.up = function(knex) {
       table.integer('docId').references('docId').inTable('Document');
     })
 
+    .createTable('Company', function(table) {
+      table.increments('companyId').primary();
+      table.text('companyName').notNullable().unique();
+      table.text('password').notNullable();
+      table.integer('docId').references('docId').inTable('Document');
+    })
+
     .then(function() {
         //Indexes triggers etc here
     });
@@ -39,6 +46,7 @@ exports.down = function(knex) {
   return knex.schema
   .dropTableIfExists('Feedback')
   .dropTableIfExists('Question')
+  .dropTableIfExists('Company')
   .dropTableIfExists('Team')
   .dropTableIfExists('Document');
 };

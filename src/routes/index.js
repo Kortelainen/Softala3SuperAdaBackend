@@ -9,13 +9,7 @@ var routes = [];
 
 //#Region hello world fuctions
 
-routes.push({
-    method: 'GET',
-    path: '/',
-    handler: function (request, reply) {
-        reply({helloworld: 'Hello world!'});
-    }
-});
+
 
 //# End of helloworld routes
 
@@ -97,18 +91,25 @@ routes.push({
 //#EndRegion teamRoutes
 
 //#Region Company
-routes.push({
-    method: 'GET',
-    path: '/companies',
-    handler: function (request, reply) {
-        reply({helloworld: 'companies'});
-    }
-});
+
 routes.push({
     method: 'POST',
     path: '/company/authenticate',
+    config: {
+      validate: {
+        payload: {
+          email: Joi.string().required(),
+          password: Joi.string().required()
+        }
+      }
+    },
     handler: function (request, reply) {
-        reply({helloworld: 'authenticate'});
+      var success = false;
+      var token = '';
+      if(success){
+         token = authUtil.createToken(id, request.payload.email, 'company');
+       }
+      reply({success: success, token: token });
     }
 });
 //#EndRegion Company
