@@ -48,3 +48,26 @@ exports.addTeam = function(team, callback){
       callback(err);
     });
   };
+
+  // getTeamList: Get list of teams. takes in searchfilter
+  exports.getTeamList = function(searchfilter, callback){
+    var pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,\/{}|\\":<>\?]/); //unacceptable chars
+    if (pattern.test(searchfilter)) {
+        searchfilter ="";//Empty string for safety
+        if(logErrors){
+            console.log("Illegal chars in search field")
+        }
+      }
+
+      var lowercaseSF = searchfilter.toLowerCase()
+      knex('Team').whereRaw(' LOWER( "teamName" ) LIKE ' + '\'%'+lowercaseSF+'%\'')
+      .then(function(results) {
+        callback(null, results);
+        })
+      .catch(function(err) {
+        if(logErrors){
+          console.log('Something went wrong!', err);
+        }
+        callback(err);
+      });
+  };

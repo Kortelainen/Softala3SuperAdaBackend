@@ -89,6 +89,22 @@ routes.push({
     } //End of handler
 }); //End of POST: /teams
 
+routes.push({
+    method: 'POST',
+    path: '/teamList',
+    config: {
+      validate: {
+        payload: {
+          searchfilter: Joi.string().allow("")
+        }
+      },
+    },
+    handler: function(request, reply){
+      teamDbFunctions.getTeamList(request.payload.searchfilter,function(err, result) {
+      reply({err: err , result: result });
+      });
+    } //End of handler
+});
 
 //#EndRegion teamRoutes
 

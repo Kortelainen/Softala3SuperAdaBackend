@@ -43,16 +43,3 @@ exports.addCompany = function(company, callback){
           callback(err);
         });
   };
-
-  exports.addQuestion = function(question, callback) {
-   knex('Questions').insert({question})
-   .then(function(results) {
-     callback(null, results);
-   })
-   .catch(function(err) {
-     if(logErrors){
-       console.log('Something went wrong!', err);
-     }
-     callback(err);
-   });
-  };

@@ -3,8 +3,8 @@
 var knex = require('../db').knexlocal;
 var logErrors = require('../db').logErrors;
 
-  exports.addCompanyPoint = function(companypoint, callback) {
-   knex('CompanyPoint').insert({companypoint})
+exports.addCompanyPoint = function(companypoint, callback) {
+   knex('CompanyPoint').insert(companypoint)
    .then(function(results) {
      callback(null, results);
    })
@@ -14,4 +14,4 @@ var logErrors = require('../db').logErrors;
      }
      callback(err);
    });
-  };
+};
