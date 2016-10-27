@@ -3,6 +3,7 @@ var knex = require('../db').knexlocal;
 var authUtil = require('../utils/authUtil');
 var teamDbFunctions = require('../datasource/teamfunctions.js');
 var companyDbFunctions = require('../datasource/companyfunctions.js');
+var companypointDbFunctions = require('../datasource/companypointfunctions.js');
 const Joi = require('joi');
 
 
@@ -139,6 +140,55 @@ routes.push({
 
 //#EndRegion Company
 
+// #Region CompanyPoint
+routes.push({
+    method: 'POST',
+    path: '/companypoint',
+    config: {
+      auth: {
+        strategy: 'jwt',
+        scope: 'company'
+      },
+      validate: {
+        payload: {
+          teamId: Joi.number().required(),
+          companyId: Joi.number().required(),
+          point: Joi.number().required()
+        }
+      },
+      pre: [
+        {method: authUtil.bindTeamData, assign: "company"}//todo make the binder
+      ]
+    },
+
+    handler: function(request, reply){
+        var companypoint = {
+                      teamId: request.payload.teamId,
+                      companyId: request.payload.companyId,
+                      point: request.payload.point
+                    }
+
+        teamDbFunctions.addTeam(team,function(err, result){
+
+          //callback
+          var success = false;
+          var message = '';
+
+          if(result != null && result[0] != null){
+            success = result[0] > 0;
+          }
+
+          if(!success){
+            message = "Adding points failed";
+          }
+
+          reply({success: success, message: message });
+          }
+
+        );
+    } //End of handler
+}); //End of POST: /companypoint
+// #EndRegion CompanyPoint
 
 //#Region feedback
 
