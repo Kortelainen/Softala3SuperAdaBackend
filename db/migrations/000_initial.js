@@ -37,6 +37,19 @@ exports.up = function(knex) {
       table.integer('docId').references('docId').inTable('Document');
     })
 
+    .createTable('CompanyPoint', function(table){
+      table.increments('pointId').primary();
+      table.integer('point').notNullable();
+      table.integer('teamId').references('teamId').inTable('Team');
+      table.integer('companyId').references('companyId').inTable('Company');
+    })
+
+    .createTable('Admin', function(table){
+      table.increments('adminId').primary();
+      table.text('adminName').notNullable();
+      table.text('password').notNullable();
+    })
+
     .then(function() {
         //Indexes triggers etc here
     });
@@ -44,8 +57,10 @@ exports.up = function(knex) {
 
 exports.down = function(knex) {
   return knex.schema
+  .dropTableIfExists('Admin')
   .dropTableIfExists('Feedback')
   .dropTableIfExists('Question')
+  .dropTableIfExists('CompanyPoint')
   .dropTableIfExists('Company')
   .dropTableIfExists('Team')
   .dropTableIfExists('Document');
