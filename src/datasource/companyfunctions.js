@@ -16,8 +16,22 @@ exports.getCompany = function(name, callback){
     });
 };
 
-exports.addCompany = function(, callback){
-        knex("Company").insert(Company)
+
+exports.getCompanies = function(callback){
+  knex.select("companyName", "docId").from("Company")
+  .then(function(results) {
+    callback(null, results);
+    })
+  .catch(function(err) {
+    if(logErrors){
+      console.log('Something went wrong!', err);
+    }
+    callback(err);
+  });
+};
+
+exports.addCompany = function(company, callback){
+        knex("Company").insert(company)
         .returning("companyId")
         .then(function(re) {
           callback(null, re);

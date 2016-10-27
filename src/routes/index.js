@@ -2,13 +2,13 @@
 var knex = require('../db').knexlocal;
 var authUtil = require('../utils/authUtil');
 var teamDbFunctions = require('../datasource/teamfunctions.js');
+var companyDbFunctions = require('../datasource/companyfunctions.js');
 const Joi = require('joi');
 
 
 var routes = [];
 
 //#Region hello world fuctions
-
 
 
 //# End of helloworld routes
@@ -88,6 +88,7 @@ routes.push({
     } //End of handler
 }); //End of POST: /teams
 
+
 //#EndRegion teamRoutes
 
 //#Region Company
@@ -112,6 +113,30 @@ routes.push({
       reply({success: success, token: token });
     }
 });
+
+routes.push({
+    method: 'GET',
+    path: '/companies',
+    config: {
+      auth: {
+        strategy: 'jwt',
+        scope: 'team' //TODO change this to admin later
+      },
+      pre: [
+        {method: authUtil.bindTeamData, assign: "team"}
+      ]
+    },
+    handler: function(request, reply){
+
+    companyDbFunctions.getCompanies(function(err, result) {
+
+      reply({err: err , result: result });
+    });
+
+    } //End of handler
+}); //End of POST: /company
+
+
 //#EndRegion Company
 
 
