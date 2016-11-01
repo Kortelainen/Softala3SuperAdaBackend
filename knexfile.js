@@ -8,10 +8,10 @@
 const ALL_ENVIRONMENTS = Object.freeze({
   client: 'postgresql',
   connection: {
-     host : '127.0.0.1',
-     user : 'postgres', /* whoami */
-     password : 'Admin',
-     database : 'postgres'
+    host : '127.0.0.1',
+    user : 'petrikortelainen', /* whoami */
+    password : '',
+    database : 'postgres'
    },
   // Use a single connection to execute migrations.
   pool: {

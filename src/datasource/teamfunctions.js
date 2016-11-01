@@ -50,7 +50,7 @@ exports.addTeam = function(team, callback){
   };
 
   // getTeamList: Get list of teams. takes in searchfilter
-  exports.getTeamList = function(searchfilter, callback){
+  exports.getTeamList = function(searchfilter, companyId, callback){
     var pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,\/{}|\\":<>\?]/); //unacceptable chars
     if (pattern.test(searchfilter)) {
         searchfilter ="";//Empty string for safety
@@ -60,7 +60,8 @@ exports.addTeam = function(team, callback){
       }
 
       var lowercaseSF = searchfilter.toLowerCase()
-      knex('Team').whereRaw(' LOWER( "teamName" ) LIKE ' + '\'%'+lowercaseSF+'%\'')
+      knex.select('Team.*','CompanyPoint.point').from("Team").leftJoin("CompanyPoint", 'Team.teamId', 'CompanyPoint.teamId')
+      .whereRaw(' LOWER( "teamName" ) LIKE ' + '\'%'+lowercaseSF+'%\' AND "CompanyPoint"."companyId" = '+ companyId)
       .then(function(results) {
         callback(null, results);
         })

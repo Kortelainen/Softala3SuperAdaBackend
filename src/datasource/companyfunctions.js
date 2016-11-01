@@ -3,6 +3,11 @@
 var knex = require('../db').knexlocal;
 var logErrors = require('../db').logErrors;
 
+exports.validateCompanyLogin = function(login,password,callback){
+  //TODO!!!
+  callback(null,new { "loginSuccess" : true })
+};
+
 exports.getCompany = function(name, callback){
     knex.select("companyId").from("Company").where({"companyName": name })
     .then(function(results) {

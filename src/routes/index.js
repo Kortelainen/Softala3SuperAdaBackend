@@ -100,10 +100,13 @@ routes.push({
       },
     },
     handler: function(request, reply){
-      teamDbFunctions.getTeamList(request.payload.searchfilter,function(err, result) {
+
+      var companyId = 1; //TODO pull from sessionToken
+
+      teamDbFunctions.getTeamList(request.payload.searchfilter, companyId, function(err, result) {
       reply({err: err , result: result });
       });
-    } //End of handler
+    }
 });
 
 //#EndRegion teamRoutes
@@ -124,9 +127,18 @@ routes.push({
     handler: function (request, reply) {
       var success = false;
       var token = '';
+
+          //TODO
+
       if(success){
-         token = authUtil.createToken(id, request.payload.email, 'company');
-       }
+        token = authUtil.createToken(id, request.payload.email, 'company');
+      }else{
+        token = {"token": "derp.herp.test",
+        "expiresIn": "18000000"}//REMOVE WHEN VALIDATE IS DONE
+        success = true;
+      }
+
+
       reply({success: success, token: token });
     }
 });
@@ -137,7 +149,7 @@ routes.push({
     config: {
       auth: {
         strategy: 'jwt',
-        scope: 'team' //TODO change this to admin later
+        scope: 'team'
       },
       pre: [
         {method: authUtil.bindTeamData, assign: "team"}
@@ -161,20 +173,20 @@ routes.push({
     method: 'POST',
     path: '/companypoint',
     config: {
-      auth: {
+      /*auth: {
         strategy: 'jwt',
         scope: 'company'
-      },
+      },*/
       validate: {
         payload: {
           teamId: Joi.number().required(),
           companyId: Joi.number().required(),
           point: Joi.number().required()
         }
-      },
+      }/*,
       pre: [
         {method: authUtil.bindTeamData, assign: "company"}//todo make the binder
-      ]
+      ]*/
     },
 
     handler: function(request, reply){
@@ -182,9 +194,10 @@ routes.push({
                       teamId: request.payload.teamId,
                       companyId: request.payload.companyId,
                       point: request.payload.point
-                    }
+                    } //TODO get companyid from token??
 
-        teamDbFunctions.addTeam(team,function(err, result){
+
+        companypointDbFunctions.addCompanyPoint(companypoint,function(err, result){
 
           //callback
           var success = false;

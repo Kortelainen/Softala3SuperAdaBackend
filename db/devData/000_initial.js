@@ -68,7 +68,6 @@ knex('CompanyPoint').insert({ point: 4,
                         })
 
 knex('Question').insert({ questionText: "Mistä sait tiedon tapahtumasta?"
-
                         })
 
 knex('Feedback').insert({ answerText: "Haaga-Heliasta kaverilta",
@@ -81,10 +80,6 @@ knex('Feedback').insert({ answerText: "Netistä",
 
 knex('Admin').insert({ adminName: "Admin",
                        password: "Adm1n4dmin"
-
                     })
-
 return null;
-
-
 };
