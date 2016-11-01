@@ -119,7 +119,7 @@ routes.push({
     config: {
       validate: {
         payload: {
-          email: Joi.string().required()
+          name: Joi.string().required()
         }
       }
     },
@@ -127,7 +127,7 @@ routes.push({
       var success = false;
       var token = '';
 
-      companyDbFunctions.getCompany(request.payload.email,function(err, result){
+      companyDbFunctions.getCompany(request.payload.name,function(err, result){
         //callback
         var success = false;
         var id = 0;
