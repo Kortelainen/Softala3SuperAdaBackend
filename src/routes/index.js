@@ -119,8 +119,7 @@ routes.push({
     config: {
       validate: {
         payload: {
-          email: Joi.string().required(),
-          password: Joi.string().required()
+          email: Joi.string().required()
         }
       }
     },
@@ -128,19 +127,22 @@ routes.push({
       var success = false;
       var token = '';
 
-          //TODO
+      companyDbFunctions.getCompany(request.payload.email,function(err, result){
+        //callback
+        var success = false;
+        var id = 0;
+        if(result != null && result[0] != 'undefined'){
+          success = result[0].companyId > 0;
+          id = result[0].teamId;
+        }
 
-      if(success){
-        token = authUtil.createToken(id, request.payload.email, 'company');
-      }else{
-        token = {"token": "derp.herp.test",
-        "expiresIn": "18000000"}//REMOVE WHEN VALIDATE IS DONE
-        success = true;
-      }
-
-
-      reply({success: success, token: token });
-    }
+       if(success){
+          token = authUtil.createToken(id, request.payload.name, 'company');
+        }
+       reply({success: success, token: token });
+       }
+     );
+  }
 });
 
 routes.push({
