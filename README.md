@@ -17,13 +17,13 @@ todo
 Git pull project.
 Recomended to use tortoiseSVN
 
-Inside repo
+Inside local repository
 
 ```
 npm i -g nodemon
 ```
 
-Try runnin soft inside repo
+Try running nodemon - soft inside local repo
 ```
 nodemon
 ```
@@ -61,7 +61,7 @@ TODO
 ```
   Change port in index.js
   you can try port 30000 or any other. in netstat you can see all ports currently in use
-  
+
   Change user and password in db.js
   its likely user is postgres if not go to bigsql manager and see the name of db owner
 ```
@@ -103,12 +103,10 @@ $ lunchy start postgres
 
 now in terminal within repo initiate db tables
 ```
-TODO npm run db:migrate
+TODO npm run db:init
 ```
 
 to make sure tables and db connection works run on browser
 ```
 TODO
 ```
-
-
