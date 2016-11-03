@@ -205,8 +205,9 @@ routes.push({
           var success = false;
           var message = '';
 
-          if(result != null && result[0] != null){
-            success = result[0] > 0;
+          console.log(result);
+          if(result != null){
+            success = result > 0;
           }
 
           if(!success){
