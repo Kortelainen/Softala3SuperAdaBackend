@@ -4,12 +4,14 @@ var authUtil = require('../utils/authUtil');
 var teamDbFunctions = require('../datasource/teamfunctions.js');
 var companyDbFunctions = require('../datasource/companyfunctions.js');
 var companypointDbFunctions = require('../datasource/companypointfunctions.js');
+var adminDbFunctions = require('../datasource/adminfunctions.js');
 const Joi = require('joi');
 
 
 var routes = [];
 
 //#Region hello world fuctions
+
 
 
 //# End of helloworld routes
@@ -205,9 +207,8 @@ routes.push({
           var success = false;
           var message = '';
 
-          console.log(result);
-          if(result != null){
-            success = result > 0;
+          if(result != null && result[0] != null){
+            success = result[0] > 0;
           }
 
           if(!success){
@@ -226,5 +227,31 @@ routes.push({
 
 //#EndRegion feedback
 
+//#Region admin routes
+routes.push({
+  method: 'POST',
+  path: '/admins/authenticate',
+  config: {
+    validate: {
+      payload: {
+        admin: Joi.string().required(),
+        password: Joi.string().required()
+      }
+    }
+  },
+  handler: function(request, reply){
+      adminDbFunctions.findAdmin(request.payload.admin, request.payload.password ,function(success){
+
+        var token = '';
+
+        if(success){
+           token = authUtil.createToken(1, request.payload.admin, 'admin');
+         }
+
+         reply({success: success, token:token });
+      })
+  }
+})
+//#EndRegion admin routes
 
 module.exports = routes;
