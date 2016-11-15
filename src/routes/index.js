@@ -161,9 +161,7 @@ routes.push({
     },
     handler: function(request, reply){
 
-
-
-    companyDbFunctions.getCompanies(30, function(err, result) {
+    companyDbFunctions.getCompanies(request.pre.team.id, function(err, result) {
 
       reply({err: err , result: result });
     });
