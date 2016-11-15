@@ -209,7 +209,7 @@ routes.push({
 
           console.log(result);
           if(result != null){
-            success = result > 0;
+              success = result > 0;
           }
 
           if(!success){
@@ -252,6 +252,45 @@ routes.push({
          reply({success: success, token:token });
       })
   }
+})
+
+routes.push({
+  method: 'POST',
+  path: '/clearPoints',
+  config: {
+    validate: {
+      payload: {
+        teamId: Joi.number().required()
+      }
+    }
+  },
+  handler: function(request, reply) {
+      var companyId = 1; //TODO get companyid from token
+
+      var clearPoints = {
+                    companyId: 1,
+                    teamId: request.payload.teamId
+                  } //TODO get companyid from token
+
+      companypointDbFunctions.clearCompanyPoint(clearPoints,function(err, result) {
+
+        //callback
+        var success = false;
+        var message = '';
+
+        console.log(result);
+        if(result != null){
+            success = result > 0;
+        }
+
+        if(!success){
+          message = "Clearing points failed";
+        }
+
+        reply({success: success, message: message });
+        }
+      );
+    }
 })
 //#EndRegion admin routes
 
