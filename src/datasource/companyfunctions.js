@@ -22,8 +22,12 @@ exports.getCompany = function(name, callback){
 };
 
 
-exports.getCompanies = function(callback){
-  knex.select("companyName", "docId").from("Company")
+exports.getCompanies = function(teamId, callback){
+  knex.select('Company.companyName', 'Company.docId')
+  .select(knex.raw('CASE WHEN "CompanyPoint"."teamId" IS NULL then TRUE ELSE FALSE END AS visited'))
+  .from("Company")
+  .leftJoin("CompanyPoint", 'Company.companyId', 'CompanyPoint.companyId')
+  .whereRaw('"CompanyPoint"."teamId" = '+ teamId + ' OR "CompanyPoint"."teamId" IS NULL')
   .then(function(results) {
     callback(null, results);
     })
