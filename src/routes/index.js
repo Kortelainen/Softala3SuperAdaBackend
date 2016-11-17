@@ -5,12 +5,13 @@ var teamDbFunctions = require('../datasource/teamfunctions.js');
 var companyDbFunctions = require('../datasource/companyfunctions.js');
 var companypointDbFunctions = require('../datasource/companypointfunctions.js');
 var adminDbFunctions = require('../datasource/adminfunctions.js');
+var documentDbFunctions = require('../datasource/documentfunctions.js');
 const Joi = require('joi');
 
 
 var routes = [];
 
-//#Region hello world fuctions
+//#Region hello world
 
 
 
@@ -222,37 +223,7 @@ routes.push({
         );
     } //End of handler
 }); //End of POST: /companypoint
-// #EndRegion CompanyPoint
 
-//#Region feedback
-
-//#EndRegion feedback
-
-//#Region admin routes
-routes.push({
-  method: 'POST',
-  path: '/admins/authenticate',
-  config: {
-    validate: {
-      payload: {
-        admin: Joi.string().required(),
-        password: Joi.string().required()
-      }
-    }
-  },
-  handler: function(request, reply){
-      adminDbFunctions.findAdmin(request.payload.admin, request.payload.password ,function(success){
-
-        var token = '';
-
-        if(success){
-           token = authUtil.createToken(1, request.payload.admin, 'admin');
-         }
-
-         reply({success: success, token:token });
-      })
-  }
-})
 
 routes.push({
   method: 'POST',
@@ -292,6 +263,39 @@ routes.push({
       );
     }
 })
+// #EndRegion CompanyPoint
+
+//#Region feedback
+
+//#EndRegion feedback
+
+//#Region admin routes
+routes.push({
+  method: 'POST',
+  path: '/admins/authenticate',
+  config: {
+    validate: {
+      payload: {
+        admin: Joi.string().required(),
+        password: Joi.string().required()
+      }
+    }
+  },
+  handler: function(request, reply){
+      adminDbFunctions.findAdmin(request.payload.admin, request.payload.password ,function(success){
+
+        var token = '';
+
+        if(success){
+           token = authUtil.createToken(1, request.payload.admin, 'admin');
+         }
+
+         reply({success: success, token:token });
+      })
+  }
+})
+
 //#EndRegion admin routes
+
 
 module.exports = routes;
