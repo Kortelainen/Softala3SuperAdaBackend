@@ -29,7 +29,7 @@ exports.hashPassword = function(password) { // TODO
   return promise;
 }
 
-let jwtExpirationHours = 5;
+let jwtExpirationHours = 24;
 // Crate a json web token for user id and name
 exports.createToken = function(id, name, scope) {
   // Sign the JWT
