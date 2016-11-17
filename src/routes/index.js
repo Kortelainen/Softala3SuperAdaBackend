@@ -110,8 +110,7 @@ routes.push({
       ]
     },
     handler: function(request, reply){
-
-      var companyId = 1; //TODO pull from sessionToken
+      var companyId = request.pre.company.id;
 
       teamDbFunctions.getTeamList(request.payload.searchfilter, companyId, function(err, result) {
       reply({err: err , result: result });
@@ -143,7 +142,7 @@ routes.push({
         var id = 0;
         if(result != null && result[0] != 'undefined'){
           success = result[0].companyId > 0;
-          id = result[0].teamId;
+          id = result[0].companyId;
         }
 
        if(success){
@@ -185,28 +184,27 @@ routes.push({
     method: 'POST',
     path: '/companypoint',
     config: {
-      /*auth: {
+      auth: {
         strategy: 'jwt',
         scope: 'company'
-      },*/
+      },
       validate: {
         payload: {
           teamId: Joi.number().required(),
-          companyId: Joi.number().required(),
           point: Joi.number().required()
         }
-      }/*,
+      },
       pre: [
-        {method: authUtil.bindTeamData, assign: "company"}//todo make the binder
-      ]*/
+        {method: authUtil.bindTeamData, assign: "company"}
+      ]
     },
 
     handler: function(request, reply){
         var companypoint = {
                       teamId: request.payload.teamId,
-                      companyId: request.payload.companyId,
+                      companyId: request.pre.company.id,
                       point: request.payload.point
-                    } //TODO get companyid from token??
+                    }
 
 
         companypointDbFunctions.addCompanyPoint(companypoint,function(err, result){
@@ -236,19 +234,26 @@ routes.push({
   method: 'POST',
   path: '/clearPoints',
   config: {
+    auth: {
+      strategy: 'jwt',
+      scope: 'company'
+    },
     validate: {
       payload: {
         teamId: Joi.number().required()
       }
-    }
+    },
+    pre: [
+      {method: authUtil.bindTeamData, assign: "company"}
+    ]
   },
   handler: function(request, reply) {
       var companyId = 1; //TODO get companyid from token
 
       var clearPoints = {
-                    companyId: 1,
+                    companyId: request.pre.company.id,
                     teamId: request.payload.teamId
-                  } //TODO get companyid from token
+                  }
 
       companypointDbFunctions.clearCompanyPoint(clearPoints,function(err, result) {
 
