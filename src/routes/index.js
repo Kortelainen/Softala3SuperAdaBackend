@@ -101,6 +101,13 @@ routes.push({
           searchfilter: Joi.string().allow("")
         }
       },
+      auth: {
+        strategy: 'jwt',
+        scope: 'company'
+      },
+      pre: [
+        {method: authUtil.bindTeamData, assign: "company"}
+      ]
     },
     handler: function(request, reply){
 
