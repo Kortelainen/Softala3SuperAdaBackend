@@ -69,3 +69,18 @@ exports.clearCompanyPoint = function(clearPoints, callback) {
       }
     })
 };
+
+exports.getCompanyPoints = function(teamId, callback) {
+  knex.sum('point')
+  .from('CompanyPoint')
+  .where({"teamId": teamId})
+    .then(function(results) {
+      callback(null, results);
+      })
+    .catch(function(err) {
+      if(logErrors){
+        console.log('Something went wrong!', err);
+      }
+      callback(err);
+    });
+  };

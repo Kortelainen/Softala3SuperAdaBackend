@@ -274,7 +274,32 @@ routes.push({
         }
       );
     }
-})
+});
+
+//#CompanyPoint GET
+
+routes.push({
+    method: 'GET',
+    path: '/companypoints',
+    config: {
+      auth: {
+        strategy: 'jwt',
+        scope: 'team'
+      },
+      pre: [
+        {method: authUtil.bindTeamData, assign: "team"}
+      ]
+    },
+    handler: function(request, reply){
+
+    companypointDbFunctions.getCompanyPoints(request.pre.team.id,function(err, result) {
+
+      reply({err: err , result: result });
+    });
+
+    } //End of handler
+}); //End of POST: /company
+
 // #EndRegion CompanyPoint
 
 //#Region feedback
@@ -305,7 +330,7 @@ routes.push({
          reply({success: success, token:token });
       })
   }
-})
+});
 
 //#EndRegion admin routes
 
