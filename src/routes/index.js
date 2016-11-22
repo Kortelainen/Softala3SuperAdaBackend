@@ -248,7 +248,6 @@ routes.push({
     ]
   },
   handler: function(request, reply) {
-      var companyId = 1; //TODO get companyid from token
 
       var clearPoints = {
                     companyId: request.pre.company.id,
