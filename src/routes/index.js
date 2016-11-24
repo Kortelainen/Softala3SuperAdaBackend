@@ -5,13 +5,13 @@ var teamDbFunctions = require('../datasource/teamfunctions.js');
 var companyDbFunctions = require('../datasource/companyfunctions.js');
 var companypointDbFunctions = require('../datasource/companypointfunctions.js');
 var adminDbFunctions = require('../datasource/adminfunctions.js');
-var   feedbackDbFunctions = require('../datasource/feedbackfunctions.js');
+var documentDbFunctions = require('../datasource/documentfunctions.js');
 const Joi = require('joi');
 
 
 var routes = [];
 
-//#Region hello world fuctions
+//#Region hello world
 
 
 
@@ -101,10 +101,16 @@ routes.push({
           searchfilter: Joi.string().allow("")
         }
       },
+      auth: {
+        strategy: 'jwt',
+        scope: 'company'
+      },
+      pre: [
+        {method: authUtil.bindTeamData, assign: "company"}
+      ]
     },
     handler: function(request, reply){
-
-      var companyId = 1; //TODO pull from sessionToken
+      var companyId = request.pre.company.id;
 
       teamDbFunctions.getTeamList(request.payload.searchfilter, companyId, function(err, result) {
       reply({err: err , result: result });
@@ -136,7 +142,7 @@ routes.push({
         var id = 0;
         if(result != null && result[0] != 'undefined'){
           success = result[0].companyId > 0;
-          id = result[0].teamId;
+          id = result[0].companyId;
         }
 
        if(success){
@@ -162,7 +168,7 @@ routes.push({
     },
     handler: function(request, reply){
 
-    companyDbFunctions.getCompanies(function(err, result) {
+    companyDbFunctions.getCompanies(request.pre.team.id, function(err, result) {
 
       reply({err: err , result: result });
     });
@@ -185,12 +191,11 @@ routes.push({
       validate: {
         payload: {
           teamId: Joi.number().required(),
-          companyId: Joi.number().required(),
           point: Joi.number().required()
         }
       },
       pre: [
-        {method: authUtil.bindTeamData, assign: "company"}//todo make the binder
+        {method: authUtil.bindTeamData, assign: "company"}
       ]
     },
 
@@ -208,8 +213,9 @@ routes.push({
           var success = false;
           var message = '';
 
-          if(result != null && result[0] != null){
-            success = result[0] > 0;
+          console.log(result);
+          if(result != null){
+              success = result > 0;
           }
 
           if(!success){
@@ -222,6 +228,52 @@ routes.push({
         );
     } //End of handler
 }); //End of POST: /companypoint
+
+
+routes.push({
+  method: 'POST',
+  path: '/clearPoints',
+  config: {
+    auth: {
+      strategy: 'jwt',
+      scope: 'company'
+    },
+    validate: {
+      payload: {
+        teamId: Joi.number().required()
+      }
+    },
+    pre: [
+      {method: authUtil.bindTeamData, assign: "company"}
+    ]
+  },
+  handler: function(request, reply) {
+
+      var clearPoints = {
+                    companyId: request.pre.company.id,
+                    teamId: request.payload.teamId
+                  }
+
+      companypointDbFunctions.clearCompanyPoint(clearPoints,function(err, result) {
+
+        //callback
+        var success = false;
+        var message = '';
+
+        console.log(result);
+        if(result != null){
+            success = result > 0;
+        }
+
+        if(!success){
+          message = "Clearing points failed";
+        }
+
+        reply({success: success, message: message });
+        }
+      );
+    }
+});
 
 //#CompanyPoint GET
 
@@ -250,56 +302,7 @@ routes.push({
 // #EndRegion CompanyPoint
 
 //#Region feedback
-routes.push({
-    method: 'POST',
-    path: '/feedback',
-    config: {
-      auth: {
-        strategy: 'jwt',
-        scope: 'team'
-      },
-      validate: {
-        payload: {
-          schoolGrade: Joi.number(),
-          answer1: Joi.string().allow(""),
-          answer2: Joi.string().allow(""),
-          answer3: Joi.string().allow(""),
-          answer4: Joi.string().allow(""),
-          answer5: Joi.string().allow("")
-        }
-      },
-      pre: [
-        {method: authUtil.bindTeamData, assign: "team"}
-      ]
-    },
-  handler: function(request, reply) {
-        var feedback = {  schoolGrade: request.payload.schoolGrade,
-                      answer1: request.payload.answer1,
-                      answer2: request.payload.answer2,
-                      answer3: request.payload.answer3,
-                      answer4: request.payload.answer4,
-                      answer5: request.payload.answer5
-                    }
-        console.log("foo " + request.payload.answer2 + " " + request.payload.answer1)
-        feedbackDbFunctions.saveFeedback(feedback,function(err, result){
 
-          //callback
-          var success = false;
-          var message = '';
-
-          if(result != null && result[0] != null){
-            success = result[0] > 0;
-          }
-
-          if(!success){
-            message = "Adding feedback failed";
-          }
-
-          reply({success: success, message: message });
-        }
-      );
-    }//End of handler
-});//End of POST: /feedback
 //#EndRegion feedback
 
 //#Region admin routes
@@ -327,6 +330,8 @@ routes.push({
       })
   }
 });
+
 //#EndRegion admin routes
+
 
 module.exports = routes;
