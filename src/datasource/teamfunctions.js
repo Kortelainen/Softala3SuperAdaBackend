@@ -61,8 +61,8 @@ exports.addTeam = function(team, callback){
 
       var lowercaseSF = searchfilter.toLowerCase()
       knex.select('Team.*','CompanyPoint.point').from("Team")
-      .leftJoin("CompanyPoint", 'Team.teamId', 'CompanyPoint.teamId') // todo extend leftjoin to look at companyid!!!!!!
-      .whereRaw(' LOWER( "teamName" ) LIKE ' + '\'%'+lowercaseSF+'%\' AND ("CompanyPoint"."companyId" = '+ companyId + ' OR "CompanyPoint"."companyId" IS NULL)')
+      .joinRaw('LEFT JOIN "CompanyPoint" on "Team"."teamId" = "CompanyPoint"."teamId" AND "CompanyPoint"."companyId" = '+ companyId+ ' ')
+      .whereRaw(' LOWER( "teamName" ) LIKE ' + '\'%'+lowercaseSF+'%\'')
       .orderBy('Team.teamName', 'asc')
       .then(function(results) {
         callback(null, results);
