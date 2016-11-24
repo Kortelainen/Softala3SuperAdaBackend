@@ -6,6 +6,7 @@ var companyDbFunctions = require('../datasource/companyfunctions.js');
 var companypointDbFunctions = require('../datasource/companypointfunctions.js');
 var adminDbFunctions = require('../datasource/adminfunctions.js');
 var documentDbFunctions = require('../datasource/documentfunctions.js');
+var   feedbackDbFunctions = require('../datasource/feedbackfunctions.js');
 const Joi = require('joi');
 
 
@@ -212,8 +213,6 @@ routes.push({
           //callback
           var success = false;
           var message = '';
-
-          console.log(result);
           if(result != null){
               success = result > 0;
           }
@@ -259,8 +258,6 @@ routes.push({
         //callback
         var success = false;
         var message = '';
-
-        console.log(result);
         if(result != null){
             success = result > 0;
         }
@@ -302,7 +299,55 @@ routes.push({
 // #EndRegion CompanyPoint
 
 //#Region feedback
+routes.push({
+    method: 'POST',
+    path: '/feedback',
+    config: {
+      auth: {
+        strategy: 'jwt',
+        scope: 'team'
+      },
+      validate: {
+        payload: {
+          schoolGrade: Joi.number(),
+          answer1: Joi.string().allow(""),
+          answer2: Joi.string().allow(""),
+          answer3: Joi.string().allow(""),
+          answer4: Joi.string().allow(""),
+          answer5: Joi.string().allow("")
+        }
+      },
+      pre: [
+        {method: authUtil.bindTeamData, assign: "team"}
+      ]
+    },
+  handler: function(request, reply) {
+        var feedback = {  schoolGrade: request.payload.schoolGrade,
+                      answer1: request.payload.answer1,
+                      answer2: request.payload.answer2,
+                      answer3: request.payload.answer3,
+                      answer4: request.payload.answer4,
+                      answer5: request.payload.answer5
+                    }
+        feedbackDbFunctions.saveFeedback(feedback,function(err, result){
 
+          //callback
+          var success = false;
+          var message = '';
+
+          if(result != null && result[0] != null){
+            success = result[0] > 0;
+          }
+
+          if(!success){
+            message = "Adding feedback failed";
+          }
+
+          reply({success: success, message: message });
+        }
+      );
+    }//End of handler
+});//End of POST: /feedback
 //#EndRegion feedback
 
 //#Region admin routes
