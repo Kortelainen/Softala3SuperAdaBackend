@@ -55,7 +55,7 @@ routes.push({
     config: {
       auth: {
         strategy: 'jwt',
-        scope: 'team' //TODO change this to admin later
+        scope: 'admin'
       },
       validate: {
         payload: {
@@ -65,7 +65,7 @@ routes.push({
         }
       },
       pre: [
-        {method: authUtil.bindTeamData, assign: "team"}
+        {method: authUtil.bindTeamData, assign: "admin"}
       ]
     },
 
@@ -118,7 +118,48 @@ routes.push({
       });
     }
 });
+routes.push({
+    method: 'GET',
+    path: '/companies',
+    config: {
+      auth: {
+        strategy: 'jwt',
+        scope: 'team'
+      },
+      pre: [
+        {method: authUtil.bindTeamData, assign: "team"}
+      ]
+    },
+    handler: function(request, reply){
 
+    companyDbFunctions.getCompanies(request.pre.team.id, function(err, result) {
+
+      reply({err: err , result: result });
+    });
+
+    } //End of handler
+});
+routes.push({
+    method: 'GET',
+    path: '/teamDetails',
+    config: {
+      auth: {
+        strategy: 'jwt',
+        scope: 'team'
+      },
+      pre: [
+        {method: authUtil.bindTeamData, assign: "team"}
+      ]
+    },
+    handler: function(request, reply){
+      teamDbFunctions.getDetails(request.pre.team.id, function(err, result) {
+
+        var returnObject = {file : result[0].file.toString('base64'), description : result[0].description}
+        console.log('teamDetails over returnObject', returnObject.file);
+        reply({err: err , result: returnObject });
+      });
+    } //End of handler
+});
 //#EndRegion teamRoutes
 
 //#Region Company
@@ -155,27 +196,7 @@ routes.push({
   }
 });
 
-routes.push({
-    method: 'GET',
-    path: '/companies',
-    config: {
-      auth: {
-        strategy: 'jwt',
-        scope: 'team'
-      },
-      pre: [
-        {method: authUtil.bindTeamData, assign: "team"}
-      ]
-    },
-    handler: function(request, reply){
-
-    companyDbFunctions.getCompanies(request.pre.team.id, function(err, result) {
-
-      reply({err: err , result: result });
-    });
-
-    } //End of handler
-}); //End of POST: /company
+ //End of POST: /company
 
 
 //#EndRegion Company
@@ -378,5 +399,67 @@ routes.push({
 
 //#EndRegion admin routes
 
+//#Region DocumentRoutes
 
+routes.push({
+    method: 'POST',
+    path: '/savePicture',
+    config: {
+      auth: {
+        strategy: 'jwt',
+        scope: 'team'
+      },
+      validate: {
+        payload: {
+          data: Joi.string().required(),
+        }
+      },
+      pre: [
+        {method: authUtil.bindTeamData, assign: "team"}
+      ]
+    },
+
+    handler: function(request, reply){
+        const buf = Buffer.from(request.payload.data, 'base64');
+
+        console.log('savePicture started buf = ' + buf)
+        var success = false;
+        var message = '';
+        var docId = 0;
+
+        var document = {
+                          file: buf,
+                          doctype: 1
+                        }
+
+        documentDbFunctions.saveDocument(document,function(err, result){
+          //callback
+          if(result != null && result[0] != null){
+            success = result[0] > 0;
+            docId = result[0]
+          }
+
+          if(!success){
+            message = "Adding document failed.";
+          }
+
+          if(success){
+            //Attach document to relation
+            teamDbFunctions.updateTeamDetails(docId, request.pre.team.id, function(err,result){
+              if(result != null && result[0] != null){
+                success = result[0] > 0;
+              }
+
+              if(!success){
+                message = "Adding document relation to team failed.";
+              }
+            });
+          }
+          console.log('savePicture ended success = ' + success)
+          reply({success: success, message: message });
+        });
+    } //End of handler
+}); //End of POST: /teams
+
+//#EndRegion DocumentRoutes
 module.exports = routes;
