@@ -66,6 +66,8 @@ exports.clearCompanyPoint = function(clearPoints, callback) {
            }
            callback(err);
          });
+      } else {
+        callback(null);
       }
     })
 };
