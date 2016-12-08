@@ -106,6 +106,11 @@ now in terminal within repo initiate db tables
 TODO npm run db:init
 ```
 
+optional: insert seed data for development:
+```
+npm run db:seed
+```
+
 to make sure tables and db connection works run on browser
 ```
 TODO

@@ -8,7 +8,8 @@
     "start": "node src/index.js",
     "db:init": "knex migrate:latest",
     "db:migrate": "knex migrate:latest",
-    "db:rollback": "knex migrate:rollback"
+    "db:rollback": "knex migrate:rollback",
+    "db:seed": "knex seed:run"
   },
   "author": "Futurice",
   "license": "MIT",
