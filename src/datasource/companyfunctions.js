@@ -21,7 +21,7 @@ exports.getCompanies = function(teamId, callback){
   knex.select('Company.companyId','Company.companyName', 'Company.docId')
   .select(knex.raw('CASE WHEN "CompanyPoint"."teamId" IS NOT NULL then TRUE ELSE FALSE END AS visited'))
   .from("Company")
-  .leftJoin("CompanyPoint", 'Company.companyId', 'CompanyPoint.companyId')
+  .joinRaw('LEFT JOIN "CompanyPoint" on "Company"."companyId" = "CompanyPoint"."companyId" AND "CompanyPoint"."teamId" = '+ teamId + ' ')
   .whereRaw('"CompanyPoint"."teamId" = '+ teamId + ' OR "CompanyPoint"."teamId" IS NULL')
   .then(function(results) {
     callback(null, results);
