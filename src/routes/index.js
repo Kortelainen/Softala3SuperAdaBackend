@@ -6,7 +6,7 @@ var companyDbFunctions = require('../datasource/companyfunctions.js');
 var companypointDbFunctions = require('../datasource/companypointfunctions.js');
 var adminDbFunctions = require('../datasource/adminfunctions.js');
 var documentDbFunctions = require('../datasource/documentfunctions.js');
-var   feedbackDbFunctions = require('../datasource/feedbackfunctions.js');
+var feedbackDbFunctions = require('../datasource/feedbackfunctions.js');
 const Joi = require('joi');
 
 
@@ -160,7 +160,11 @@ routes.push({
     },
     handler: function(request, reply){
       teamDbFunctions.getDetails(request.pre.team.id, function(err, result) {
-        var returnObject = {file : result[0].file.toString('base64'), description : result[0].description}
+          var file64 = null;
+          if(result[0].file != null){
+            file64 = result[0].file.toString('base64');
+          }
+        var returnObject = {name : result[0].teamName, file : file64, description : result[0].description}
         reply({err: err , result: returnObject });
       });
     } //End of handler
@@ -427,7 +431,6 @@ routes.push({
     handler: function(request, reply){
         const buf = Buffer.from(request.payload.data, 'base64');
 
-        console.log('savePicture started buf = ' + buf)
         var success = false;
         var message = '';
         var docId = 0;
@@ -450,7 +453,7 @@ routes.push({
 
           if(success){
             //Attach document to relation
-            teamDbFunctions.updateTeamDetails(docId, request.pre.team.id, function(err,result){
+            teamDbFunctions.attachDocumentToTeam(docId, request.pre.team.id, function(err,result){
               if(result != null && result[0] != null){
                 success = result[0] > 0;
               }
@@ -464,7 +467,36 @@ routes.push({
           reply({success: success, message: message });
         });
     } //End of handler
-}); //End of POST: /teams
+});
+
+routes.push({
+  method: 'POST',
+  path: '/saveDescription',
+  config: {
+    auth: {
+      strategy: 'jwt',
+      scope: 'team'
+    },
+    validate: {
+      payload: {
+        teamDescription: Joi.string().allow(""),
+      }
+    },
+    pre: [
+      {method: authUtil.bindTeamData, assign: "team"}
+    ]
+  },
+
+  handler: function(request, reply){
+
+    teamDbFunctions.updateTeamDescription(request.pre.team.id, request.payload.teamDescription, function(err, result){
+      var success = result>0;
+         reply({err: err, success: success});
+    });
+  }
+});
+
+ //End of POST: /teams
 
 //#EndRegion DocumentRoutes
 module.exports = routes;
