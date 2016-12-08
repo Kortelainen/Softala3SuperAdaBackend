@@ -114,6 +114,13 @@ routes.push({
       var companyId = request.pre.company.id;
 
       teamDbFunctions.getTeamList(request.payload.searchfilter, companyId, function(err, result) {
+
+      result.forEach(function(item, index){
+        if(item != null && item.file != null){
+          item.file = item.file.toString('base64')
+        }
+      });
+
       reply({err: err , result: result });
       });
     }
@@ -153,9 +160,7 @@ routes.push({
     },
     handler: function(request, reply){
       teamDbFunctions.getDetails(request.pre.team.id, function(err, result) {
-
         var returnObject = {file : result[0].file.toString('base64'), description : result[0].description}
-        console.log('teamDetails over returnObject', returnObject.file);
         reply({err: err , result: returnObject });
       });
     } //End of handler

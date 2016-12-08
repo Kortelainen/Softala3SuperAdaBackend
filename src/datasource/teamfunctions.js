@@ -82,8 +82,10 @@ exports.addTeam = function(team, callback){
       }
 
       var lowercaseSF = searchfilter.toLowerCase()
-      knex.select('Team.*','CompanyPoint.point').from("Team")
+      knex.select('Team.*', 'CompanyPoint.point', 'Document.file')
+      .from("Team")
       .joinRaw('LEFT JOIN "CompanyPoint" on "Team"."teamId" = "CompanyPoint"."teamId" AND "CompanyPoint"."companyId" = '+ companyId+ ' ')
+      .leftJoin('Document', 'Document.docId', 'Team.docId')
       .whereRaw(' LOWER( "teamName" ) LIKE ' + '\'%'+lowercaseSF+'%\'')
       .orderBy('Team.teamName', 'asc')
       .then(function(results) {
