@@ -23,7 +23,7 @@ exports.getDetails = function(teamId, callback){
     LEFT JOIN "Document" on "Document"."docId" = "Team"."docId"
     WHERE "Team"."teamId" = 27;
   */
-    knex.select('Team.name', 'Team.description', 'Document.file')
+    knex.select('Team.teamName', 'Team.description', 'Document.file')
     .from("Team")
     .leftJoin('Document', 'Document.docId', 'Team.docId')
     .where({"teamId": teamId })
