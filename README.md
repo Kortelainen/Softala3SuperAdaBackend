@@ -15,7 +15,6 @@ todo
 ## Windows
 
 Git pull project.
-Recomended to use tortoiseSVN
 
 Inside local repository
 
